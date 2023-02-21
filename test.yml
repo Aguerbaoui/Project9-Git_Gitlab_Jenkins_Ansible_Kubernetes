@@ -1,0 +1,51 @@
+---
+- name: Ansible k8s module
+  hosts: servers
+  tasks:
+  
+  - name: "Install kubernetes python package" #This will be installed on the remote host.
+    pip:
+      name: kubernetes
+      state: present# Create a test namespace on the cluster without any manifest fies. This is an added advantage on ansible.
+  - name: "Create a k8s namespace"
+    k8s:
+      name: test
+      api_version: v1
+      kind: Namespace
+      state: present# Copying the Pod.yaml and deployment.yaml in the remote node.
+  - name: "copying file with playbook"
+    copy:
+      src: ../k8s/pod.yaml
+     # dest: /tmp/pod.yaml- name: copying file with playbook
+     # copy:
+     # src: ../k8s/deployment.yaml
+     # dest: /tmp/deployment.yaml# Creating a Kubernetes pod in test using file stored on local.- name: "Create a pod"
+    k8s:
+      state: present
+      namespace: test
+      src: /tmp/pod.yaml# Checking if the Kubernetes pods is running on the cluster.
+  - name: "Status of the pod"
+    k8s:
+      api_version: v1
+      kind: pod
+      name: nginx
+      namespace: test
+    register: web_service# Creating a Kubernetes deployment in test using file stored locally
+  - name: "Create a deployment"
+    k8s:
+      state: present
+      namespace: test
+      src: /tmp/deployment.yaml# CleanUP all the applied configurations
+  - name: "Ansible file module to delete multiple files"
+    file:       
+      path: "{{ item }}"     
+      state: absent   # to delete the files   
+    with_items:   
+    - /tmp/deployment.yaml
+    - /tmp/pod.yaml# Clear the namespace on the cluster
+  - name: "Delete a k8s namespace"
+    k8s:
+      name: test
+      api_version: v1
+      kind: Namespace
+      state: absent

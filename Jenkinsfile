@@ -9,7 +9,7 @@ pipeline {
     
         stage('git clone') {
                 steps {
-                     git branch: 'main', credentialsId: 'jenkins', url: 'git@gitlab.com:Aguerbaoui/project-8.git'
+                     git branch: 'main', credentialsId: 'jenkins', url: 'git@gitlab.com:Aguerbaoui/project-9.git'
             
             
                 }
@@ -24,69 +24,48 @@ pipeline {
                 }
         }
 
-
-
-      stage('Docker Build and Tag') {
+        stage('Docker Build and Tag') {
            steps {
-              
-                // sshPublisher(publishers: [sshPublisherDesc(configName: 'ubuntu', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'docker build -t tomcat-image .', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'Dockerfile')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-                 // sh 'docker tag nginxtest nadiaaguerbaoui1/tomcat-image:latest'
-                 // sh 'docker tag nginxtest nadiaaguerbaoui1/tomcat-image:$BUILD_NUMBER'
-                 sshPublisher(publishers: [sshPublisherDesc(configName: 'ubuntu', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''docker build -t tomcat-image .; 
-docker tag tomcat-image nadiaaguerbaoui1/tomcat-image:latest;
-docker tag tomcat-image nadiaaguerbaoui1/tomcat-image:$BUILD_NUMBER;''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'Dockerfile')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-               
-          }
+            sh 'docker build -t nadiaaguerbaoui1/tomcat-image:latest .'
+           
+               }
         }
-
-
-
-       /* stage('Copy and build the Dockerfile ')
-        {
-
-                steps{
-
-                  sshPublisher(publishers: [sshPublisherDesc(configName: 'ubuntu', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'docker images', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: 'Dockerfile')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-
-
-                }
-        }
-
-      */
-        
-      /*  stage('Build image and run Docker container on remote host') {
-                steps {
-                    sshPublisher(publishers: [sshPublisherDesc(configName: 'ubuntu', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''docker stop tomcat-container; 
-                            docker rm tomcat-container; 
-                            docker rmi tomcat-image; 
-                            docker build -t tomcat-image .; 
-                            docker run -d --name tomcat-container -p 8080:8080 tomcat-image; ''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: 'webapp/target', sourceFiles: 'webapp/target/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-              
-                }
-        }*/
-
-     /*  stage('Docker Build and Tag') {
-           steps {
-              
-                sh 'docker build -t nginxtest:latest .' 
-                  sh 'docker tag nginxtest nikhilnidhi/nginxtest:latest'
-                sh 'docker tag nginxtest nikhilnidhi/nginxtest:$BUILD_NUMBER'
-               
-          }
-        }*/
-        
      
          stage('Publish image to Docker Hub') {
           
             steps {
                 withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-                    sh  'docker push nadiaaguerbaoui1/tomcat-image:latest'
-                    sh  'docker push nadiaaguerbaoui1/tomcat-image:$BUILD_NUMBER' 
+                   
+                   sh 'docker push nadiaaguerbaoui1/tomcat-image:latest'
                    }
+      
                   
           }
         }
 
+        stage('Ansible Playbook')
+        {
+
+            steps{
+                 ansiblePlaybook credentialsId: 'private_key1', installation: 'ansible', inventory: 'ansible/inventory/hosts', playbook: 'ansible/playbooks/playbook.yml'
+
+            }
+        }
+         
+
+
+     /* stage('Deploy to k8s cluster'){
+        steps{
+
+            script{
+                   // kubernetesDeploy (configs: 'dep.yaml', kubeconfigId: 'kubeconfig')
+                    kubernetesDeploy configs: 'deployservice.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubeconfig', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
+                }
+
+         }
+
+
+     }   */
 
 
   

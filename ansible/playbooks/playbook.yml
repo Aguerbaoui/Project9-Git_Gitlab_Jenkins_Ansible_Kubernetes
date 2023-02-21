@@ -1,0 +1,59 @@
+---
+- name: Ansible k8s module
+# Creating the namespace in the kubernete cluster
+  hosts: servers
+# Defining the remote server where the k8 module will manage the objects
+  #remote_user: ubuntu   # Using Remote user as ubuntu
+  become: true
+  tasks:
+    - name: "Install kubernetes python package" #This will be installed on the remote host.
+      pip:
+        name: kubernetes
+        state: present
+        # Create a test namespace on the cluster without any manifest fies. This is an added advantage on ansible.
+    - name: Create a k8s namespace
+      k8s:
+        name: Tomcat-namespace # defining the namespace
+        api_version: v1
+        kind: Namespace
+        state: present    # State=present when you need to create new object
+
+# Copying the Pod.yaml and deployment.yaml in the remote node which will be further used to create the pods and deployment in the kubernetes cluster
+
+    - name: copying file with playbook
+      become: true
+      copy:
+        src: /home/ubuntu/ansible_k8s_module_demo/pod.yaml
+        dest: /tmp/pod.yaml
+
+    - name: copying file with playbook
+      become: true
+      copy:
+        src: /home/ubuntu/ansible_k8s_module_demo/deployment.yaml
+        dest: /tmp/deployment.yaml
+
+# Creating a Kubernetes pod in ata-namespace using file stored locally
+
+    - name: Create a pod
+      k8s:
+        state: present      # State=present when you need to create new object
+        namespace: Tomcat-namespace  # defining the namespace
+        src: /tmp/pod.yaml
+
+# Checking the a Kubernetes pods in the ata-namespace
+
+    - name: Get an existing Pods in the kubernetes cluster
+      k8s:
+        api_version: v1
+        kind: pod
+        name: nginx
+        namespace: Tomcat-namespace  # defining the namespace
+      register: web_service
+
+# Creating a Kubernetes deployment in ata-namespace using file stored locally
+
+    - name: Create a deployment
+      k8s:
+        state: present            # State=present when you need to create new object
+        namespace: Tomcat-namespace  # defining the namespace
+        src: /tmp/deployment.yaml  # Source file location

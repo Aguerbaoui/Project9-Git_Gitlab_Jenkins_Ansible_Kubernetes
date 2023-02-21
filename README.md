@@ -73,3 +73,19 @@ http://50.18.137.175:30218
 curl http://<public-node-ip>:<node-port>
 you can use this link :
 https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
+## How to delete and uninstall K8S:
+https://stackoverflow.com/questions/44698283/how-to-completely-uninstall-kubernetes
+## Problems to connect to Ansible
+fatal: [172.31.1.85]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ubuntu@172.31.1.85: Permission denied (publickey,password).", "unreachable": true}
+unrechable instance why ?
+Solution:
+## Prepare a playbook to install docker, K8S and all it's dependecies, 
+## Step 1 :
+Install Docker runtime
+## Step 2 :
+Install Kubernetes
+## Use an ansible role:
+ansible --version
+ansible-galaxy init role
+## step 3 let’s write our task in tasks/main.yml
+
