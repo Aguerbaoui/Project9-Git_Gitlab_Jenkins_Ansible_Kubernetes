@@ -2,9 +2,7 @@ FROM tomcat:latest
 
 LABEL maintainer="Aguerbaoui Nadia"
 
-ARG Path= /home/ubuntu
-
-COPY webapp.war /usr/local/tomcat/webapps
+COPY ./webapps/target/webapp.war /usr/local/tomcat/webapps
 
 EXPOSE 8080
 
