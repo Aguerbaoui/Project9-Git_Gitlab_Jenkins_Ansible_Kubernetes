@@ -16,7 +16,7 @@
       state: present
   - name: "copying service file with playbook"  
     copy:
-      src: ./service.yml
+      src: /var/lib/jenkins/workspace/Project9Git_Gitlab_Jenkins_Ansible_Kubernetes/service.yml
       dest: service.yml
       remote_src: true
 
