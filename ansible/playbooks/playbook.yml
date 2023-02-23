@@ -15,6 +15,7 @@
       kind: Namespace
       state: present
   - name: "copying service file with playbook"
+    remote_src:   
     copy:
       src: service.yml
       dest: service.yml
