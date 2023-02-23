@@ -89,3 +89,14 @@ ansible --version
 ansible-galaxy init role
 ## step 3 let’s write our task in tasks/main.yml
 
+Il faut installer dans le server prod et jenkins under Ansible:
+************************************************************
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+under jenkins under ansible user :
+************************************************************
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
