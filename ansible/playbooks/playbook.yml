@@ -14,11 +14,11 @@
       api_version: v1
       kind: Namespace
       state: present
-  - name: "copying service file with playbook"
-    remote_src:   
+  - name: "copying service file with playbook"  
     copy:
       src: service.yml
       dest: service.yml
+      remote_src: true
 
   - name: copying deployment file with playbook
     copy:
