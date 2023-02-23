@@ -1,7 +1,7 @@
 ---
 - name: Ansible k8s module
   hosts: servers
-  remote_user: ansible
+  remote_user: ubuntu
   tasks:
 
   - name: "Install kubernetes python package"
