@@ -16,13 +16,13 @@
       state: present
   - name: "copying service file with playbook"  
     copy:
-      src: ./kubernetes/service.yml
+      src:  service.yml
       dest: service.yml
       remote_src: true
 
   - name: copying deployment file with playbook
     copy:
-       src: /kubernetes/deployment.yml
+       src:  deployment.yml
        dest: deployment.yml
        remote_src: true
 
@@ -30,13 +30,13 @@
     k8s:
       state: present
       namespace: tomcat-namespace
-      src: /kubernetes/deployment.yml
+      src: deployment.yml
 
   - name: "Create a service"
     k8s:
       state: present
       namespace: tomcat-namespace
-      src: /kubernetes/service.yml
+      src: service.yml
 
   - name: "Ansible file module to delete multiple files"
     become: true
