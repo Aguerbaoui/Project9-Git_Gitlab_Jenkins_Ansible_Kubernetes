@@ -47,10 +47,10 @@
     - deployment.yml
     - service.yml
 
- # - name: "Delete a k8s namespace"
- #   become: true
- #   k8s:
- #     name: Tomcat-namespace
- #     api_version: v1
- #     kind: Namespace
- #     state: absent
+  - name: "Delete a k8s namespace"
+    become: true
+    k8s:
+     name: Tomcat-namespace
+     api_version: v1
+     kind: Namespace
+     state: absent
