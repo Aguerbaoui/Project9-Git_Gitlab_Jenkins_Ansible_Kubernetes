@@ -1,6 +1,7 @@
 ---
 - name: Ansible k8s module
   hosts: servers
+  become: true
   tasks:
 
   - name: "Install kubernetes python package"
@@ -14,7 +15,6 @@
       kind: Namespace
       state: present
   - name: "copying service file with playbook"
-    become: true
     copy:
       src: service.yml
       dest: service.yml
