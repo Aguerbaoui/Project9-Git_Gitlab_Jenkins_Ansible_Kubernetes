@@ -1,7 +1,7 @@
 ---
 - name: Ansible k8s module
   hosts: servers
-  become: true
+  become_user: ansible
   tasks:
 
   - name: "Install kubernetes python package"
