@@ -18,13 +18,13 @@
     copy:
       src:  service.yml
       dest: service.yml
-      remote_src: true
+      #remote_src: true
 
   - name: copying deployment file with playbook
     copy:
        src:  deployment.yml
        dest: deployment.yml
-       remote_src: true
+       #remote_src: true
 
   - name: "Create a deployement"
     k8s:
