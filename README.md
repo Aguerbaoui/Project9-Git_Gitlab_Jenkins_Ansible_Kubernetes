@@ -100,3 +100,5 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+
+copy the public key in ansible to ensure the cnx between the 2 servers (unrechable problem)
